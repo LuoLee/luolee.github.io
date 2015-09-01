@@ -1,13 +1,18 @@
-# Site settings
-title: lilo的小站
+title: lilo在写字
 email: luolee.me@gmail.com
-description: > # 底部描述
-  成功不必在我，而功力必不唐捐
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://luolee.me" # the base hostname & protocol for your site
+baseurl: ""
+url: "http://luolee.me"
+
+date_format: "%Y-%m-%d"
+
+google_analytics:
+disqus_shortname:
 twitter_username: loyulinux
 github_username:  luolee
 highlighter: pygments
 
 # Build settings
-markdown: kramdown
+markdown:     redcarpet
+redcarpet:
+  extensions: ['smart', 'tables', 'with_toc_data']
+permalink:    pretty
