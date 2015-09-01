@@ -1,0 +1,20 @@
+---
+layout: post
+title:  "你好，Jekyll！"
+date:   2015-09-01 15:05:20
+categories: jekyll, Blog
+---
+欢迎来到Jekyll的世界，以下应当是一段代码：
+
+{% highlight Objective-C %}
+static AspectsContainer *aspect_getContainerForClass(Class klass, SEL selector) {
+    NSCParameterAssert(klass);
+    AspectsContainer *classContainer = nil;
+    do {
+        classContainer = objc_getAssociatedObject(klass, selector);
+        if (classContainer.hasAspects) break;
+    }while ((klass = class_getSuperclass(klass)));
+
+    return classContainer;
+}
+{% endhighlight %}
