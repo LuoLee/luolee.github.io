@@ -48,7 +48,7 @@ end
 
 执行`pod install/update`后打开`URLRouteExample.xcworkspace`即可。  
 
-我们在ViewController之外新建两个ViewController用于演示：`UREFirstViewController`、`URESecondViewController`。可以在AppDelegate中初始化并添加DeepLinkKit的路由逻辑，但当项目逐渐膨胀之后此法便不再可取，因此这里新建一个`URERoutes`类用于处理路由逻辑。  
+我们在ViewController之外新建两个ViewController用于演示：`UREFirstViewController`、`URESecondViewController`。可以在`AppDelegate`中初始化并添加`DeepLinkKit`的路由逻辑，但当项目逐渐膨胀之后此法便不再可取，因此这里新建一个`URERoutes`类用于处理路由逻辑。  
 
 ## 路由  
 
@@ -87,7 +87,7 @@ end
 }
 ```
 
-另外在AppDelegate中相应的代理方法中调用DeepLinkKit的路由即可（这里是URERoutes的单例）：  
+另外在`AppDelegate`中相应的代理方法中调用`DeepLinkKit`的路由即可（这里是`URERoutes`的单例）：  
 
 ```Objective-C
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -109,5 +109,17 @@ end
 另外为了方便各ViewController的跳转需要获取当前可是界面最上层的ViewController以确定是```pushViewController```还是```presentViewController```。  
 
 最后值得一提的是，由于通过URL Scheme方式各ViewController变得完全透明，因此以往的基于`delegate`方式的ViewController回传数据已不再可用，演示代码中通过`NSNotificationCenter`的方式由`UREFirstViewController`向`URESecondViewController`传值，由于是Demo性质的因此权当作一个引子，关于`NSNotificationCenter`的一对多通知的处理还需完善；当然也可通过`NSUserDefaults`的方式来透传。  
+
+## 更新
+
+由于`NSNotificationCenter`的跨层弊端，目前已改为常用的`Delegate`的方式了。其关键点在于获取Objective-C对象在内存中的地址并将其转换为对应的对象：
+
+```Objective-C
+uintptr_t hex = strtoull(self.memAddress.UTF8String, NULL, 0);
+id object = (__bridge id)((void*)hex);
+if ([object conformsToProtocol:@protocol(UREViewControllerDelegate)] && [object respondsToSelector:NSSelectorFromString(@"justLog:")]) {
+    [object performSelector:NSSelectorFromString(@"justLog:") withObject:[NSString stringWithFormat:@"%d", arc4random_uniform(100)]];
+}
+```
 
 完整的例子可从[这里](https://github.com/LuoLee/URLRouteExample)获取。  
